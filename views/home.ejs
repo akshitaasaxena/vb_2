@@ -9,16 +9,35 @@
         <% if (currentUser) { %>
             <% if (currentUserRole === "admin") { %>
                 <a href="/admin/dashboard" class="btn btn-primary btn-lg">Go to Admin Dashboard</a>
+                <a href="/admin/slots" class="btn btn-outline btn-lg">Manage Slots</a>
             <% } else { %>
                 <a href="/slots" class="btn btn-primary btn-lg">Browse Parking Slots</a>
                 <a href="/dashboard" class="btn btn-outline btn-lg">My Dashboard</a>
             <% } %>
         <% } else { %>
             <a href="/register" class="btn btn-primary btn-lg">Get Started</a>
-            <a href="/login" class="btn btn-outline btn-lg">Login</a>
+            <a href="/login" class="btn btn-outline btn-lg">User Login</a>
+            <a href="/login?role=admin" class="btn btn-outline btn-lg" style="border-color: #f72585; color: #f72585;">Admin Login</a>
         <% } %>
     </div>
 </div>
+
+<% if (!currentUser) { %>
+<div class="demo-credentials-banner" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem 1.5rem; margin: -1.5rem auto 2rem auto; max-width: 800px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <strong style="color: #1a1a2e; display: block; font-size: 1rem; margin-bottom: 0.25rem;">🔑 Demo Access Accounts:</strong>
+            <span style="font-size: 0.9rem; color: #64748b;">
+                <strong>Admin:</strong> <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">admin@parking.com</code> (Pass: <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">admin123</code>) &nbsp;|&nbsp;
+                <strong>User:</strong> <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">rahul@gmail.com</code> (Pass: <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">user123</code>)
+            </span>
+        </div>
+        <div>
+            <a href="/login?role=admin" class="btn btn-primary" style="background: #f72585; padding: 0.5rem 1rem; font-size: 0.85rem;">Login as Admin</a>
+        </div>
+    </div>
+</div>
+<% } %>
 
 <div class="features-grid">
     <div class="feature-card">
