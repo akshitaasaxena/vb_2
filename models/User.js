@@ -4,16 +4,19 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     email: {
         type: String,
         required: true,
-        unique: true        // No two users can have the same email
+        unique: true,
+        lowercase: true,
+        trim: true
     },
     password: {
         type: String,
-        required: true       // This stores the HASHED password, never plain text
+        required: true
     },
     role: {
         type: String,

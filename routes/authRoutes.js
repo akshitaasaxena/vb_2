@@ -17,8 +17,8 @@ router.get("/register", function(req, res) {
 // ============================================
 router.post("/register", async function(req, res) {
     try {
-        const name = req.body.name;
-        const email = req.body.email;
+        const name = req.body.name ? req.body.name.trim() : "";
+        const email = req.body.email ? req.body.email.trim().toLowerCase() : "";
         const password = req.body.password;
 
         // Check if all fields are filled
@@ -29,7 +29,7 @@ router.post("/register", async function(req, res) {
         // Check if a user with this email already exists
         const existingUser = await User.findOne({ email: email });
         if (existingUser) {
-            return res.render("register", { error: "Email is already registered." });
+            return res.render("register", { error: "Email is already registered. Please login instead." });
         }
 
         // Hash the password — 10 is the "salt rounds" (how many times it's scrambled)
@@ -48,7 +48,10 @@ router.post("/register", async function(req, res) {
         res.redirect("/login");
 
     } catch (error) {
-        console.log("Registration error:", error.message);
+        console.log("Registration error:", error);
+        if (error.code === 11000) {
+            return res.render("register", { error: "Email is already registered. Please login instead." });
+        }
         res.render("register", { error: "Something went wrong. Please try again." });
     }
 });
@@ -65,7 +68,7 @@ router.get("/login", function(req, res) {
 // ============================================
 router.post("/login", async function(req, res) {
     try {
-        const email = req.body.email;
+        const email = req.body.email ? req.body.email.trim().toLowerCase() : "";
         const password = req.body.password;
 
         // Check if both fields are filled
@@ -109,7 +112,7 @@ router.post("/login", async function(req, res) {
         }
 
     } catch (error) {
-        console.log("Login error:", error.message);
+        console.log("Login error:", error);
         res.render("login", { error: "Something went wrong. Please try again." });
     }
 });
