@@ -23,29 +23,8 @@
             <button type="submit" class="btn btn-primary btn-full">Login</button>
         </form>
 
-        <div style="margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px dashed #e2e8f0;">
-            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.6rem; text-align: center;">⚡ <strong>Quick Demo Login:</strong></p>
-            <div style="display: flex; gap: 0.5rem;">
-                <button type="button" onclick="quickFill('admin@parking.com', 'admin123')" class="btn btn-outline" style="flex: 1; font-size: 0.82rem; padding: 0.4rem 0.5rem; border-color: #f72585; color: #f72585;">👑 Demo Admin</button>
-                <button type="button" onclick="quickFill('rahul@gmail.com', 'user123')" class="btn btn-outline" style="flex: 1; font-size: 0.82rem; padding: 0.4rem 0.5rem;">👤 Demo User</button>
-            </div>
-        </div>
-
         <p class="auth-footer">Don't have an account? <a href="/register">Register here</a></p>
     </div>
 </div>
-
-<script>
-function quickFill(email, password) {
-    document.getElementById("email").value = email;
-    document.getElementById("password").value = password;
-}
-
-// Auto-fill admin if redirected with ?role=admin
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get("role") === "admin") {
-    quickFill("admin@parking.com", "admin123");
-}
-</script>
 
 <%- include("partials/footer") %>

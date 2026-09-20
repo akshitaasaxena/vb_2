@@ -90,4 +90,35 @@
 </div>
 <% } %>
 
+<!-- Add New Admin Section -->
+<div class="dashboard-section" style="margin-top: 2rem;">
+    <h2>👑 Add New Admin</h2>
+    <p style="color: #64748b; margin-bottom: 1rem;">Create a new administrator account for the parking system.</p>
+
+    <% if (typeof adminSuccess !== 'undefined' && adminSuccess) { %>
+        <div class="alert alert-success" style="background: #d1fae5; color: #065f46; padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #a7f3d0;">
+            ✅ <%= adminSuccess %>
+        </div>
+    <% } %>
+    <% if (typeof adminError !== 'undefined' && adminError) { %>
+        <div class="alert alert-error"><%= adminError %></div>
+    <% } %>
+
+    <form action="/admin/add-admin" method="POST" style="max-width: 500px;">
+        <div class="form-group">
+            <label for="adminName">Full Name</label>
+            <input type="text" id="adminName" name="name" placeholder="Enter admin name" required>
+        </div>
+        <div class="form-group">
+            <label for="adminEmail">Email</label>
+            <input type="email" id="adminEmail" name="email" placeholder="Enter admin email" required>
+        </div>
+        <div class="form-group">
+            <label for="adminPassword">Password</label>
+            <input type="password" id="adminPassword" name="password" placeholder="Create a password" required minlength="4">
+        </div>
+        <button type="submit" class="btn btn-primary">Create Admin Account</button>
+    </form>
+</div>
+
 <%- include("partials/footer") %>

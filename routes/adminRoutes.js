@@ -1,6 +1,8 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 const ParkingSlot = require("../models/ParkingSlot");
 const Booking = require("../models/Booking");
+const User = require("../models/User");
 const { isAdmin } = require("../middleware/auth");
 
 const router = express.Router();
@@ -54,7 +56,9 @@ router.get("/dashboard", isAdmin, async function(req, res) {
             occupiedSlots: occupiedSlots,
             blockedSlots: blockedSlots,
             todaysBookings: todaysBookings,
-            zoneStats: zoneStats
+            zoneStats: zoneStats,
+            adminSuccess: req.query.adminSuccess || null,
+            adminError: req.query.adminError || null
         });
 
     } catch (error) {
@@ -65,7 +69,9 @@ router.get("/dashboard", isAdmin, async function(req, res) {
             occupiedSlots: 0,
             blockedSlots: 0,
             todaysBookings: 0,
-            zoneStats: []
+            zoneStats: [],
+            adminSuccess: null,
+            adminError: null
         });
     }
 });
@@ -258,6 +264,51 @@ router.get("/bookings", isAdmin, async function(req, res) {
         res.render("all-bookings", {
             bookings: []
         });
+    }
+});
+
+// ============================================
+// ADD A NEW ADMIN (admin only)
+// ============================================
+router.post("/add-admin", isAdmin, async function(req, res) {
+    try {
+        var name = req.body.name ? req.body.name.trim() : "";
+        var email = req.body.email ? req.body.email.trim().toLowerCase() : "";
+        var password = req.body.password;
+
+        // Validate required fields
+        if (!name || !email || !password) {
+            return res.redirect("/admin/dashboard?adminError=All fields are required.");
+        }
+
+        if (password.length < 4) {
+            return res.redirect("/admin/dashboard?adminError=Password must be at least 4 characters.");
+        }
+
+        // Check if email already exists
+        var existingUser = await User.findOne({ email: email });
+        if (existingUser) {
+            return res.redirect("/admin/dashboard?adminError=A user with this email already exists.");
+        }
+
+        // Hash password and create admin
+        var hashedPassword = await bcrypt.hash(password, 10);
+        var newAdmin = new User({
+            name: name,
+            email: email,
+            password: hashedPassword,
+            role: "admin"
+        });
+        await newAdmin.save();
+
+        res.redirect("/admin/dashboard?adminSuccess=Admin account created for " + name + " (" + email + ")");
+
+    } catch (error) {
+        console.log("Add admin error:", error.message);
+        if (error.code === 11000) {
+            return res.redirect("/admin/dashboard?adminError=A user with this email already exists.");
+        }
+        res.redirect("/admin/dashboard?adminError=Could not create admin account.");
     }
 });
 
